@@ -20,3 +20,17 @@
 // 1 <= nums.length <= 105
 // nums[i] is either 0 or 1.
 // 0 <= k <= nums.length
+
+var longestOnes = function(nums, k) {
+    let windowStart = 0; let countOfZeroes = 0;
+    let maxLen = 0;
+    for(let windowEnd = 0; windowEnd < nums.length; windowEnd++) {
+        if(nums[windowEnd] === 0) countOfZeroes++;
+        while(countOfZeroes > k) {
+            if(nums[windowStart] === 0) countOfZeroes--;
+            windowStart++;
+        }
+        maxLen = Math.max(maxLen, (windowEnd - windowStart + 1));
+    }
+    return maxLen;
+};
