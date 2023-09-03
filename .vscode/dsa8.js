@@ -9,3 +9,29 @@
 // Once you reach a tree with fruit that cannot fit in your baskets, you must stop.
 // Given the integer array fruits, return the maximum number of fruits you can pick.
 
+var totalFruit = function(fruits) {
+    const distinctElemsLimit = 2;
+    let windowStart = 0; const distinctElemsMap = {}; let len = 0; let totalFruits = 0;
+    let maxFruitsCollected = 0;
+    for(let windowEnd = 0; windowEnd < fruits.length; windowEnd++) {
+        if(!(fruits[windowEnd] in distinctElemsMap)) {
+            distinctElemsMap[fruits[windowEnd]] = 1;
+            totalFruits++;
+            len++;
+        } else {
+            distinctElemsMap[fruits[windowEnd]]++;
+            totalFruits++;
+        }
+        while(len > distinctElemsLimit) {
+            distinctElemsMap[fruits[windowStart]]--;
+            totalFruits--;
+            if(distinctElemsMap[fruits[windowStart]] === 0) {
+                delete distinctElemsMap[fruits[windowStart]];
+                len--;
+            }
+            windowStart++;
+        }
+        maxFruitsCollected = Math.max(maxFruitsCollected, totalFruits);
+    }
+    return maxFruitsCollected;
+};
