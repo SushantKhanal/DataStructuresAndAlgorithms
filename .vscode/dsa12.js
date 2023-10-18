@@ -17,3 +17,44 @@
 
 // Input: s1 = "ab", s2 = "eidboaoo"
 // Output: false
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @return {boolean}
+ */
+ var checkInclusion = function(s1, s2) {
+    const originalS1CharsMap = getCharsInString(s1);
+    let s1CharsMap = {...originalS1CharsMap};
+    const len = Object.values(originalS1CharsMap).length;
+    let windowStart = 0;
+    let charsMatched = 0;
+    for(let windowEnd = 0; windowEnd < s2.length; windowEnd++) {
+        const currChar = s2[windowEnd];
+        if(currChar in s1CharsMap) {
+            s1CharsMap[currChar]--;
+            if(s1CharsMap[currChar] === 0) charsMatched++;
+            if(charsMatched === len) return true;
+            while(s1CharsMap[currChar] < 0) {
+                const winStartChar = s2[windowStart];
+                if(s1CharsMap[winStartChar] === 0) charsMatched--;
+                s1CharsMap[winStartChar]++;
+                windowStart++;
+            }
+        } else {
+            s1CharsMap = {...originalS1CharsMap};
+            charsMatched = 0;
+            windowStart = windowEnd + 1;
+        }
+    }
+    return false;
+};
+
+const getCharsInString = (str) => {
+    const map = {}
+    for(let i = 0; i < str.length; i++) {
+        const char = str[i];
+        if(!(char in map)) map[char] = 0;
+        map[char]++;
+    }
+    return map;
+}
