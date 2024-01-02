@@ -19,3 +19,29 @@
 
 // -231 <= dividend, divisor <= 231 - 1
 // divisor != 0
+
+class Solution {
+    public int divide(int dividend, int divisor) {
+        if(dividend == -2147483648 && divisor == -1) return 2147483647;
+        if(dividend > (2^31 - 1) && dividend < -(2^31)) return dividend;
+        if(Math.abs(divisor) == 1) return (dividend / divisor);
+        int sign = 1;
+        if((divisor < 0 && dividend > 0) || (divisor > 0 && dividend < 0)) 
+            sign = -1;
+        int count = 0;
+        long ldividend = Math.abs((long)dividend); //not casting into long inside Math.abs(...) causes all kinds of problems
+        long ldivisor = Math.abs((long)divisor); 
+        while(ldivisor <= ldividend) {
+            long multipleOfDivisor = ldivisor;
+            int multipleCount = 1;
+            while((multipleOfDivisor + multipleOfDivisor) <= ldividend) {
+                multipleOfDivisor += multipleOfDivisor;
+                multipleCount += multipleCount;
+            }
+            ldividend -= multipleOfDivisor;
+            count += multipleCount;
+        }
+        return count * sign;
+    }
+}
+
