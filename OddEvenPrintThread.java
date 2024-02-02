@@ -1,37 +1,37 @@
 public class OddEvenPrintThread implements Runnable {
-    Object object;
-    static int i = 1;
-    public OddEvenPrintThread(Object object) {
-        this.object = object;
+    static int count = 1;
+    Object lock;
+    public OddEvenPrintThread(Object obj) {
+        this.lock = obj;
     }
     @Override
     public void run() {
-        while(i <= 10) {
-            if(i % 2 == 0 && Thread.currentThread().getName().equals("even")) {
-                synchronized(object) {
-                    System.out.println("curr thread: " + Thread.currentThread().getName() + ", i: " + i);
-                    i++;
-                    try{
-                        object.wait();
-                    } catch(InterruptedException ex) {
-                        System.out.println("ex: " + ex);
+        while(count <= 10) {
+            if(count % 2 == 0 && Thread.currentThread().getName() == "even") { //even
+                synchronized (lock) {
+                    System.out.println(Thread.currentThread().getName() + ": " + count);
+                    try {
+                        count++;
+                        lock.wait();
+                    } catch (Exception err) {
+                        System.out.println("err: " + err);
                     }
                 }
-            } 
-            if(i <= 10 && i % 2 != 0 && Thread.currentThread().getName().equals("odd")) {
-                synchronized(object) {
-                    System.out.println("curr thread: " + Thread.currentThread().getName() + ", i: " + i);
-                    i++;
-                    object.notify();
+            }
+            if(count <= 10 && count % 2 == 1 && Thread.currentThread().getName() == "odd") { //odd
+                synchronized (lock) {
+                    System.out.println(Thread.currentThread().getName() + ": " + count);
+                    count++;
+                    lock.notify();
                 }
             }
         }
     }
     public static void main(String[] args) {
-        Object obj = new Object();
-        Thread t1 = new Thread(new OddEvenPrintThread(obj), "odd");
-        Thread t2 = new Thread(new OddEvenPrintThread(obj), "even");
-        t1.start();
-        t2.start();
+        Object lock = new Object();
+        Thread th1 = new Thread(new OddEvenPrintThread(lock), "odd");
+        Thread th2 = new Thread(new OddEvenPrintThread(lock), "even");
+        th1.start();
+        th2.start();
     }
 } 
