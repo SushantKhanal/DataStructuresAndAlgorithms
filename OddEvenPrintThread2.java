@@ -30,5 +30,6 @@ public class OddEvenPrintThread2 {
                             }, executorService);
                     evenCompletableFuture.join();
                 });
+        executorService.shutdown();
     }
 }
