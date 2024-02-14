@@ -18,4 +18,31 @@
 // Output: 23
 
 //Solution:
+//Approach: Trial and Error Binary Search
 
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int low = 0;
+        int high = Arrays.stream(piles).max().getAsInt();
+        int ans = -1;
+        while(low <= high) {
+            int mid = (low + high) / 2;
+            if(canKokoEatAllInTime(piles, h, mid)) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    public boolean canKokoEatAllInTime(int[] piles, int h, int speed) {
+        int timeTaken = 0;
+        for(int pile : piles) {
+            timeTaken += Math.ceil((double)pile/(double)speed);
+            if(timeTaken > h) return false;
+        }
+        return (timeTaken <= h);
+    }
+}
